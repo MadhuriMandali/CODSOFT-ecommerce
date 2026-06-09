@@ -17,4 +17,4 @@ npm install
 npm start
 ```
 
-The app proxies API requests to `http://api`.
+The app proxies API requests to `http://localhost:5000`.
