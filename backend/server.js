@@ -7,8 +7,8 @@ const orderRoutes = require('./routes/orderRoutes');
 const app = express();
 
 app.use(cors({
-  origin: 'https://ecommerce-ecru-one-18.vercel.app/',
-  credentials:true
+  origin: ['https://ecommerce-ecru-one-18.vercel.app', 'http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002'],
+  credentials: true
 }));
 app.use(express.json());
 
