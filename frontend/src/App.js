@@ -55,7 +55,7 @@ export default function App() {
     const fetchProducts = async () => {
       try {
         const API = process.env.REACT_APP_API_URL || 'http://localhost:5000';
-        const response = await fetch(`${API}/api/products`);
+        const response = await fetch("http://localhost:5000/api/products");
         const data = await response.json();
         setProducts(Array.isArray(data) && data.length > 0 ? data : MOCK_PRODUCTS);
       } catch (error) {
