@@ -72,22 +72,31 @@ export default function App() {
     setTimeout(() => setToast(""), 2500);
   };
 
-  const handleLogin = (event) => {
-    event.preventDefault();
-    if (!storedAccount) {
-      showToast('No account found. Please register first.');
+  const handleLogin = async (event) => {
+  event.preventDefault();
+  try {
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: accountForm.email,
+        password: accountForm.password
+      })
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      showToast(data.message || 'Login failed.');
       return;
     }
-    if (storedAccount.email !== accountForm.email || storedAccount.password !== accountForm.password) {
-      showToast('Email or password is incorrect.');
-      return;
-    }
-    setUser(storedAccount);
-    setShippingAddress(storedAccount.address || shippingAddress);
+    setUser(data.user || data);
+    setShippingAddress(data.address || shippingAddress);
     setAccountOpen(false);
-    showToast(`Welcome back, ${storedAccount.name}!`);
-  };
-
+    showToast(`Welcome back, ${data.name || data.user?.name}!`);
+  } catch (error) {
+    console.error('Login error:', error);
+    showToast('Login failed. Please try again.');
+  }
+};
   const handleRegister = async (event) => {
     event.preventDefault();
     if (!accountForm.name || !accountForm.email || !accountForm.password) {
