@@ -6,18 +6,19 @@ const orderRoutes = require('./routes/orderRoutes');
 
 const app = express();
 
-app.use(
-  cors({
-    origin: function(origin, callback) {
-      if (!origin || origin.endsWith('.vercel.app') || origin === process.env.CLIENT_URL) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
-    credentials: true,
-  })
-);
+app.use(cors({
+  origin: function(origin, callback) {
+    if (!origin || origin.includes('vercel.app') || 
+        origin.includes('localhost')) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+}));
+
+app.use(express.json());
 
 app.get('/', (req, res) => {
   res.send('Backend is running!');
