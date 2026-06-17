@@ -39,10 +39,7 @@ export default function App() {
   const [accountOpen, setAccountOpen] = useState(false);
   const [authMode, setAuthMode] = useState("login");
   const [user, setUser] = useState(null);
-  const storedAccount = localStorage.getItem('account');
-if (storedAccount) {
-  console.log(storedAccount);
-}
+  const [storedAccount, setStoredAccount] = useState(null);
   const [accountForm, setAccountForm] = useState({ name: "", email: "", password: "" });
   const [addressForm, setAddressForm] = useState({ street: "", city: "", state: "", zip: "", country: "India" });
   const [shippingAddress, setShippingAddress] = useState({ street: "", city: "", state: "", zip: "", country: "India" });
@@ -75,31 +72,22 @@ if (storedAccount) {
     setTimeout(() => setToast(""), 2500);
   };
 
-  const handleLogin = async (event) => {
-  event.preventDefault();
-  try {
-    const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        email: accountForm.email,
-        password: accountForm.password
-      })
-    });
-    const data = await response.json();
-    if (!response.ok) {
-      showToast(data.message || 'Login failed.');
+  const handleLogin = (event) => {
+    event.preventDefault();
+    if (!storedAccount) {
+      showToast('No account found. Please register first.');
       return;
     }
-    setUser(data.user || data);
-    setShippingAddress(data.address || shippingAddress);
+    if (storedAccount.email !== accountForm.email || storedAccount.password !== accountForm.password) {
+      showToast('Email or password is incorrect.');
+      return;
+    }
+    setUser(storedAccount);
+    setShippingAddress(storedAccount.address || shippingAddress);
     setAccountOpen(false);
-    showToast(`Welcome back, ${data.name || data.user?.name}!`);
-  } catch (error) {
-    console.error('Login error:', error);
-    showToast('Login failed. Please try again.');
-  }
-};
+    showToast(`Welcome back, ${storedAccount.name}!`);
+  };
+
   const handleRegister = async (event) => {
     event.preventDefault();
     if (!accountForm.name || !accountForm.email || !accountForm.password) {
