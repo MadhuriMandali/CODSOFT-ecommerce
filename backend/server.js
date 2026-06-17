@@ -6,11 +6,18 @@ const orderRoutes = require('./routes/orderRoutes');
 
 const app = express();
 
-app.use(cors({
-  origin: ['https://ecommerce-ecru-one-18.vercel.app', 'http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002'],
-  credentials: true
-}));
-app.use(express.json());
+app.use(
+  cors({
+    origin: function(origin, callback) {
+      if (!origin || origin.endsWith('.vercel.app') || origin === process.env.CLIENT_URL) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true,
+  })
+);
 
 app.get('/', (req, res) => {
   res.send('Backend is running!');
