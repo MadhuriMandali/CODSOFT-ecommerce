@@ -39,7 +39,10 @@ export default function App() {
   const [accountOpen, setAccountOpen] = useState(false);
   const [authMode, setAuthMode] = useState("login");
   const [user, setUser] = useState(null);
-  const [storedAccount, setStoredAccount] = useState(null);
+  const storedAccount = localStorage.getItem('account');
+if (storedAccount) {
+  console.log(storedAccount);
+}
   const [accountForm, setAccountForm] = useState({ name: "", email: "", password: "" });
   const [addressForm, setAddressForm] = useState({ street: "", city: "", state: "", zip: "", country: "India" });
   const [shippingAddress, setShippingAddress] = useState({ street: "", city: "", state: "", zip: "", country: "India" });
